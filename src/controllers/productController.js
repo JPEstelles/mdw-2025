@@ -1,4 +1,4 @@
-import { Producto } from "../models/productModels"
+import { Producto } from "../models/productModels.js"
 
 export const createProduct = async (req, res) => {
     try { 
@@ -12,6 +12,7 @@ export const createProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
     try {
+        console.log("Fetching all products");
         const products = await Producto.find();
         res.status(200).json(products);
     } catch (error) {
