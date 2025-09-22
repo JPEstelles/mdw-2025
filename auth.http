@@ -1,0 +1,47 @@
+### 1. Registrar un usuario
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### 2. Login (copia el token que te devuelve)
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "123456"
+}
+
+### 3. Crear producto CON TOKEN (pega aquí el token del login)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzhiYTVjMTRiNWE4MmMwMmZhZWM4MiIsImlhdCI6MTc1Nzk4NTU0MCwiZXhwIjoxNzU3OTg5MTQwfQ.5Xd6v6bTT1S-f2nbjj3oNCjEH4_an-TT1jE6OgvagMc
+
+{
+  "name": "Producto JWT",
+  "description": "Producto creado con autenticación",
+  "price": 100,
+  "stock": 50,
+  "category": "Test"
+}
+
+### 4. Ver productos CON TOKEN
+GET http://localhost:3000/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzhiYTVjMTRiNWE4MmMwMmZhZWM4MiIsImlhdCI6MTc1Nzk4NTU0MCwiZXhwIjoxNzU3OTg5MTQwfQ.5Xd6v6bTT1S-f2nbjj3oNCjEH4_an-TT1jE6OgvagMc
+
+### 5. Intentar crear producto SIN TOKEN (debería fallar)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Producto Sin Token",
+  "description": "Este debería fallar",
+  "price": 100,
+  "stock": 50,
+  "category": "Test"
+}

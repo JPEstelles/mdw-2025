@@ -1,0 +1,28 @@
+### Listar productos
+GET http://localhost:3000/api/products
+
+### Obtener producto por ID
+GET http://localhost:3000/api/products/68b5a9cc91d232abe4450749
+
+### Crear producto
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Conservadora",
+  "description": "Conservadora de 30 lts.",
+  "price": 100,
+  "stock": 33,
+  "category": "Accesorios"
+}
+
+### Actualizar producto
+PUT http://localhost:3000/api/products/68bedba1441df50404c0bd6c
+Content-Type: application/json
+
+{
+  "price": 50
+}
+
+### Eliminar producto
+DELETE http://localhost:3000/api/products/68bee188184f1ce99dda26b5
