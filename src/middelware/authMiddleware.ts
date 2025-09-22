@@ -1,27 +1,40 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../types/types';
+
+const SECRET_KEY = process.env.JWT_SECRET!;
+const jwtAccesExpiresIn = (process.env.JWT_EXPIRES_IN ?? '15m') as jwt.SignOptions['expiresIn'];
+const jwtRefreshSecret= process.env.JWT_REFRESH_SECRET!;
 
 // middleware de autenticación
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    try{
-        // Obtener el token del encabezado de autorización
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-
-        //si no hay token
-        if (!token) {
-            return res.status(401).json({ message: 'No se proporcionó token de autenticación' });
+        const token = req.cookies.accesToken;
+        try{
+            jwt.verify(token, SECRET_KEY);
+            next();
+        } catch (error) {
+            validateRefreshToken(req, res, next);
         }
+};
+const validateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.refreshToken;
+    if (!token)
+        return res.status(401).json({ message: 'No hay token' });
+    try{
+        const decoded = jwt.verify(token, jwtRefreshSecret) as JwtPayload;
 
-        // Verificar token
-        const secret = process.env.JWT_SECRET || 'secret';
-        const decoded = jwt.verify(token, secret) as { id: string };
-
-        // Adjuntar el ID del usuario al objeto de la solicitud
-        (req as any).userId = decoded.id;
+        const accesToken = jwt.sign({_id: decoded._id}, SECRET_KEY,{
+            expiresIn: jwtAccesExpiresIn
+        });
+        res.cookie('accesToken', accesToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // En producción, usar solo HTTPS
+            sameSite: 'lax', 
+            maxAge: 60 * 1000 // 1 minuto
+        });
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Token de autenticación inválido', error });           
+        return res.status(401).json({ message: 'Token de actualización no válido' });
     }
 };
-
 export default authMiddleware;
