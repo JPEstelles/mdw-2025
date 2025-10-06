@@ -3,12 +3,15 @@ import jwt from 'jsonwebtoken';
 import { JwtPayload } from '../types/types';
 
 const SECRET_KEY = process.env.JWT_SECRET!;
-const jwtAccesExpiresIn = (process.env.JWT_EXPIRES_IN ?? '15m') as jwt.SignOptions['expiresIn'];
+const jwtAccessExpiresIn = (process.env.JWT_EXPIRES_IN ?? '15m') as jwt.SignOptions['expiresIn'];
 const jwtRefreshSecret= process.env.JWT_REFRESH_SECRET!;
 
 // middleware de autenticación
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-        const token = req.cookies.accesToken;
+        console.log('Middleware de autenticación');
+        console.log('Cookies:', req.cookies);
+        const token = req.cookies.accessToken;
+        console.log('Token de acceso:', token);
         try{
             jwt.verify(token, SECRET_KEY);
             next();
@@ -23,10 +26,10 @@ const validateRefreshToken = (req: Request, res: Response, next: NextFunction) =
     try{
         const decoded = jwt.verify(token, jwtRefreshSecret) as JwtPayload;
 
-        const accesToken = jwt.sign({_id: decoded._id}, SECRET_KEY,{
-            expiresIn: jwtAccesExpiresIn
+        const accessToken = jwt.sign({_id: decoded._id}, SECRET_KEY,{
+            expiresIn: jwtAccessExpiresIn
         });
-        res.cookie('accesToken', accesToken, {
+        res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // En producción, usar solo HTTPS
             sameSite: 'lax', 

@@ -16,7 +16,7 @@ const setTokenCookies = (res: Response, accesToken: string, refreshToken: string
     //acces token de cookie corto
     res.cookie('accessToken', accesToken, {
         httpOnly: true,
-        secure: process.env.NODE_eNV === 'production', //solo en produccion
+        secure: process.env.NODE_ENV === 'production', //solo en produccion
         sameSite: 'lax', //para evitar ataques CSRF
         maxAge: 10 * 60 * 1000 //10 minutos
     });
@@ -108,8 +108,14 @@ export const login = async (req: Request, res: Response) => {
         );
         // Guardar tokens en cookies
         setTokenCookies(res, accessToken, refreshToken);
+
+        // Retornar respuesta exitosa al usuario
+        return res.status(200).json({
+            message: 'Login exitoso',
+            accessToken: accessToken
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor', error });
+        return res.status(500).json({ message: 'Error en el servidor', error });
     }
 };
 // Logout
