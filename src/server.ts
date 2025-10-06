@@ -3,6 +3,8 @@ import productRoutes from './routes/productRoutes.ts';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -12,7 +14,16 @@ const port = process.env.PORT || 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
+//Middleware de CORS para permitir solicitudes desde el frontend
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true //para las cookies
+}));
 
+//MIddleware para parsear cookies
+app.use(cookieParser());
+//Middleware para JSON
+app.use(express.json({limit: '10mb'}));// seguridad buenas practicas
 
 const connectDB = async () => {
     try {

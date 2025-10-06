@@ -14,7 +14,6 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getProducts =  async (req: Request, res: Response) => {
     try {
-        console.log("Fetching all products");
         const products = await Product.find();
         res.status(200).json(products);
     } catch (error) {
