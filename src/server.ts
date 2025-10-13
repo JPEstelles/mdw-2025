@@ -10,7 +10,8 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+//MMiddleware para parsear cookies
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
@@ -20,8 +21,6 @@ app.use(cors({
     credentials: true //para las cookies
 }));
 
-//MIddleware para parsear cookies
-app.use(cookieParser());
 //Middleware para JSON
 app.use(express.json({limit: '10mb'}));// seguridad buenas practicas
 

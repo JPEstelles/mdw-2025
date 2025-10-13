@@ -7,7 +7,7 @@ import { authMiddleware } from "../middelware/authMiddleware";
 const router = express.Router();
 
 // TODAS las rutas requieren JWT
-//router.use(authMiddleware);
+router.use(authMiddleware);
 
 router.post("/", validateDto(CreateProductDto), createProduct);
 router.get('/', getProducts);
