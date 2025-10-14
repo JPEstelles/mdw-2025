@@ -250,10 +250,7 @@ _Obtiene el carrito del usuario autenticado_
 ## Notas
 
 - Los endpoints de carrito y productos (POST, PUT, DELETE) requieren autenticación con token JWT (en header `Authorization: Bearer <token>`).
-- Las respuestas de error tienen el formato:
-  ```json
-  { "message": "Descripción del error", "error": "detalle" }
-  ```
+
 - El backend está desplegado en Render en:  
   https://mdw-2025-xnah.onrender.com
 
