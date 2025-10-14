@@ -1,5 +1,5 @@
 import express from 'express';
-import productRoutes from './routes/productRoutes.ts';
+import productRoutes from './routes/productRoutes';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes';

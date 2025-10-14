@@ -1,4 +1,4 @@
-import { Product } from "../models/productModels.ts"
+import { Product } from "../models/productModels"
 import type { Request, Response } from "express";
 
 // CORREGIDO: Agregar validación de usuario autenticado

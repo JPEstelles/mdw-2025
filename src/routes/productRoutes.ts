@@ -1,7 +1,7 @@
-import { createProduct, getProductById, getProducts,deleteProduct, updateProduct } from "../controllers/productController.ts";
+import { createProduct, getProductById, getProducts,deleteProduct, updateProduct } from "../controllers/productController";
 import express from "express";
-import validateDto from "../middelware/middleware.ts";
-import { CreateProductDto } from "../dtos/createProductDto.ts";
+import validateDto from "../middelware/middleware";
+import { CreateProductDto } from "../dtos/createProductDto";
 import { authMiddleware } from "../middelware/authMiddleware";
 
 const router = express.Router();
