@@ -20,6 +20,9 @@ export const addToCart = async (req: Request, res: Response) => {
         const userId = (req as any).user?._id || req.cookies.userId;
         const { productId, quantity } = req.body;
 
+        if (!productId || typeof quantity !== "number" || quantity <= 0) {
+            return res.status(400).json({ message: "Datos inválidos para agregar al carrito" });
+        }
         // Verifica que el producto exista
         const product = await Product.findById(productId);
         if (!product) return res.status(404).json({ message: "Producto no encontrado" });
@@ -38,7 +41,7 @@ export const addToCart = async (req: Request, res: Response) => {
             // Si no está, lo agrega
             cart.items.push({ product: productId, quantity });
         }
-
+        await recalculateTotal(cart);
         await cart.save();
         res.json(cart);
     } catch (error) {
@@ -56,6 +59,9 @@ export const removeFromCart = async (req: Request, res: Response) => {
         if (!cart) return res.status(404).json({ message: "Carrito no encontrado" });
 
         cart.items.pull({ product: productId });
+
+        
+        await recalculateTotal(cart);
         await cart.save();
         res.json(cart);
     } catch (error) {
@@ -77,3 +83,11 @@ export const clearCart = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error al vaciar el carrito", error });
     }
 };
+
+async function recalculateTotal(cart: any) {
+    // Popula los productos para acceder a su precio
+    await cart.populate("items.product");
+    cart.totalPrice = cart.items.reduce((sum: number, item: any) => {
+        return sum + (item.product?.price || 0) * item.quantity;
+    }, 0);
+}

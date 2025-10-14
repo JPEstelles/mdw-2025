@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-
+import cartRoutes from './routes/cartRoutes';
 dotenv.config();
 
 const app = express();
@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/cart', cartRoutes);
 //Middleware de CORS para permitir solicitudes desde el frontend
 app.use(cors({
     origin: 'http://localhost:3000',
